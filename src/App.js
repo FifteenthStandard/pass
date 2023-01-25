@@ -34,6 +34,8 @@ async function generatePassword(passphrase, application, increment, length, char
 
   if (passphrase === '' || application === '') return '';
 
+  passphrase = passphrase.replace(' ', '');
+
   const gen = genBytes(passphrase, application + increment);
   let password = '';
   for (let i = 0; i < length; i++) {
@@ -43,12 +45,12 @@ async function generatePassword(passphrase, application, increment, length, char
 }
 
 const WidthBox = styled(Box)(({ theme }) => ({
-  [theme.breakpoints.down('md')]: {
+  [theme.breakpoints.down('sm')]: {
     padding: theme.spacing(1),
     boxSizing: 'border-box',
     width: '100%',
   },
-  [theme.breakpoints.up('md')]: {
+  [theme.breakpoints.up('sm')]: {
     margin: 'auto',
     maxWidth: '600px',
   },

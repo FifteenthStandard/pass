@@ -20,6 +20,7 @@ export default function PasswordField(props) {
     {...props}
     type={showPassword ? 'text' : 'password'}
     InputProps={{
+      readOnly: props.readOnly,
       endAdornment: <InputAdornment position="end">
         <IconButton
           onClick={handleClickShowPassword}
