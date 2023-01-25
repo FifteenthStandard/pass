@@ -9,6 +9,7 @@ import {
   Grid,
   IconButton,
   InputAdornment,
+  Paper,
   Snackbar,
   Stack,
   TextField,
@@ -52,7 +53,6 @@ async function generatePassword(passphrase, application, increment, length, char
 
 const WidthBox = styled(Box)(({ theme }) => ({
   [theme.breakpoints.down('sm')]: {
-    padding: theme.spacing(1),
     boxSizing: 'border-box',
     width: '100%',
   },
@@ -68,7 +68,7 @@ function HelperText(props) {
   const { focused } = useFormControl() || {};
 
   const helperText = useMemo(() => {
-    return focused ? props.text : ' ';
+    return focused ? props.text : '⠀';
   }, [focused, props.text]);
 
   return helperText;
@@ -118,7 +118,10 @@ function App() {
   return <WidthBox component="form" noValidate autoComplete="off">
     <Stack direction="column" justifyContent="center" height="100vh">
       <ClickAwayListener onClickAway={onClickAway}>
-        <div>
+        <Paper sx={theme => ({
+          paddingInline: theme.spacing(2),
+          paddingTop: theme.spacing(3),
+        })}>
         <PasswordField
           autoFocus
           required
@@ -148,7 +151,7 @@ function App() {
               label="Increment"
               type="number"
               autoComplete="off"
-              helperText={<HelperText text={'Number of times you\'ve rotated this password'} />}
+              helperText={<HelperText text={'Times you\'ve rotated this password'} />}
               value={increment}
               onInput={onNumberChange(setIncrement)}
               sx={theme => ({ paddingBlock: theme.spacing(1) })}
@@ -196,7 +199,7 @@ function App() {
           onFocus={onPasswordFocus}
           sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
-        </div>
+        </Paper>
       </ClickAwayListener>
     </Stack>
     <Snackbar
