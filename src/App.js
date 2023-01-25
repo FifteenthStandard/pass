@@ -110,6 +110,7 @@ function App() {
       <ClickAwayListener onClickAway={onClickAway}>
         <div>
         <Input
+          autoFocus
           required
           fullWidth
           label="Passphrase"
@@ -117,7 +118,7 @@ function App() {
           autoComplete="off"
           value={passphrase}
           helperText={<HelperText text={'Your master passphrase. Should be long and memorable'} />}
-          onChange={onStringChange(setPassphrase)}
+          onInput={onStringChange(setPassphrase)}
         />
         <Input
           required
@@ -127,7 +128,7 @@ function App() {
           autoComplete="off"
           helperText={<HelperText text={'A unique identifier for this password, e.g. application name'} />}
           value={application}
-          onChange={onStringChange(setApplication)}
+          onInput={onStringChange(setApplication)}
         />
         <Input
           required
@@ -137,7 +138,7 @@ function App() {
           autoComplete="off"
           helperText={<HelperText text={'Number of times you\'ve rotated this password'} />}
           value={increment}
-          onChange={onNumberChange(setIncrement)}
+          onInput={onNumberChange(setIncrement)}
         />
         <Input
           required
@@ -147,7 +148,7 @@ function App() {
           autoComplete="off"
           helperText={<HelperText text={'Length of this password. Longer is better'} />}
           value={length}
-          onChange={onNumberChange(setLength)}
+          onInput={onNumberChange(setLength)}
         />
         <Input
           required
@@ -155,7 +156,7 @@ function App() {
           label="Characters"
           value={characters}
           helperText={<HelperText text={'Characters to use in this password. More is better'} />}
-          onChange={onStringChange(setCharacters)}
+          onInput={onStringChange(setCharacters)}
         />
         <Input
           fullWidth
