@@ -34,7 +34,7 @@ async function generatePassword(passphrase, application, increment, length, char
 
   if (passphrase === '' || application === '') return '';
 
-  passphrase = passphrase.replace(' ', '');
+  passphrase = passphrase.replaceAll(' ', '');
 
   const gen = genBytes(passphrase, application + increment);
   let password = '';
