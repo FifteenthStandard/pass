@@ -6,6 +6,9 @@ import {
 import {
   Box,
   ClickAwayListener,
+  Grid,
+  IconButton,
+  InputAdornment,
   Snackbar,
   Stack,
   TextField,
@@ -13,6 +16,9 @@ import {
 import {
   useFormControl,
 } from '@mui/material/FormControl';
+import {
+  Restore,
+} from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 
 import PasswordField from './PasswordField';
@@ -69,11 +75,13 @@ function HelperText(props) {
 };
 
 function App() {
+  const defaultCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+
   const [passphrase, setPassphrase] = useState('');
   const [application, setApplication] = useState('');
   const [length, setLength] = useState(40);
   const [increment, setIncrement] = useState(0);
-  const [characters, setCharacters] = useState('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()');
+  const [characters, setCharacters] = useState(defaultCharacters);
   const [password, setPassword] = useState('');
 
   useEffect(() => {
@@ -85,6 +93,8 @@ function App() {
 
   const onStringChange = set => ev => set(ev.target.value);
   const onNumberChange = set => ev => set(Math.max(0, +ev.target.value));
+
+  const onRestoreClick = ev => setCharacters(defaultCharacters);
 
   const onSnackClose = set => (ev, reason) => {
     if (reason !== 'clickaway') set(false);
@@ -130,28 +140,34 @@ function App() {
           onInput={onStringChange(setApplication)}
           sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
-        <TextField
-          required
-          fullWidth
-          label="Increment"
-          type="number"
-          autoComplete="off"
-          helperText={<HelperText text={'Number of times you\'ve rotated this password'} />}
-          value={increment}
-          onInput={onNumberChange(setIncrement)}
-          sx={theme => ({ paddingBlock: theme.spacing(1) })}
-        />
-        <TextField
-          required
-          fullWidth
-          label="Length"
-          type="number"
-          autoComplete="off"
-          helperText={<HelperText text={'Length of this password. Longer is better'} />}
-          value={length}
-          onInput={onNumberChange(setLength)}
-          sx={theme => ({ paddingBlock: theme.spacing(1) })}
-        />
+        <Grid container>
+          <Grid xs={6} sx={theme => ({ paddingRight: theme.spacing(1) })}>
+            <TextField
+              required
+              fullWidth
+              label="Increment"
+              type="number"
+              autoComplete="off"
+              helperText={<HelperText text={'Number of times you\'ve rotated this password'} />}
+              value={increment}
+              onInput={onNumberChange(setIncrement)}
+              sx={theme => ({ paddingBlock: theme.spacing(1) })}
+            />
+          </Grid>
+          <Grid xs={6} sx={theme => ({ paddingLeft: theme.spacing(1) })}>
+            <TextField
+              required
+              fullWidth
+              label="Length"
+              type="number"
+              autoComplete="off"
+              helperText={<HelperText text={'Length of this password. Longer is better'} />}
+              value={length}
+              onInput={onNumberChange(setLength)}
+              sx={theme => ({ paddingBlock: theme.spacing(1) })}
+            />
+          </Grid>
+        </Grid>
         <TextField
           required
           fullWidth
@@ -160,6 +176,15 @@ function App() {
           helperText={<HelperText text={'Characters to use in this password. More is better'} />}
           onInput={onStringChange(setCharacters)}
           sx={theme => ({ paddingBlock: theme.spacing(1) })}
+          InputProps={{
+            endAdornment: <InputAdornment position="end">
+              <IconButton
+                onClick={onRestoreClick}
+              >
+                <Restore />
+              </IconButton>
+            </InputAdornment>
+          }}
         />
         <PasswordField
           fullWidth
