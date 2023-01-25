@@ -15,6 +15,8 @@ import {
 } from '@mui/material/FormControl';
 import { styled } from '@mui/material/styles';
 
+import PasswordField from './PasswordField';
+
 import './App.css';
 
 async function generatePassword(passphrase, application, increment, length, characters) {
@@ -52,10 +54,6 @@ const WidthBox = styled(Box)(({ theme }) => ({
   },
   height: '100vh',
   overflow: 'hidden',
-}));
-
-const Input = styled(TextField)(({ theme }) => ({
-  paddingBlock: theme.spacing(1),
 }));
 
 function HelperText(props) {
@@ -109,28 +107,28 @@ function App() {
     <Stack direction="column" justifyContent="center" height="100vh">
       <ClickAwayListener onClickAway={onClickAway}>
         <div>
-        <Input
+        <PasswordField
           autoFocus
           required
           fullWidth
           label="Passphrase"
-          type="password"
           autoComplete="off"
           value={passphrase}
           helperText={<HelperText text={'Your master passphrase. Should be long and memorable'} />}
           onInput={onStringChange(setPassphrase)}
+          sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
-        <Input
+        <PasswordField
           required
           fullWidth
           label="Application"
-          type="password"
           autoComplete="off"
           helperText={<HelperText text={'A unique identifier for this password, e.g. application name'} />}
           value={application}
           onInput={onStringChange(setApplication)}
+          sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
-        <Input
+        <TextField
           required
           fullWidth
           label="Increment"
@@ -139,8 +137,9 @@ function App() {
           helperText={<HelperText text={'Number of times you\'ve rotated this password'} />}
           value={increment}
           onInput={onNumberChange(setIncrement)}
+          sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
-        <Input
+        <TextField
           required
           fullWidth
           label="Length"
@@ -149,24 +148,26 @@ function App() {
           helperText={<HelperText text={'Length of this password. Longer is better'} />}
           value={length}
           onInput={onNumberChange(setLength)}
+          sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
-        <Input
+        <TextField
           required
           fullWidth
           label="Characters"
           value={characters}
           helperText={<HelperText text={'Characters to use in this password. More is better'} />}
           onInput={onStringChange(setCharacters)}
+          sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
-        <Input
+        <PasswordField
           fullWidth
           readOnly
           disabled={password === ''}
-          type="password"
           label="Password"
           value={password}
           helperText={<HelperText text={'Your password. It was just copied to your clipboard'} />}
           onFocus={onPasswordFocus}
+          sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
         </div>
       </ClickAwayListener>
