@@ -1,10 +1,8 @@
 import {
   useEffect,
-  useMemo,
   useState,
 } from 'react';
 import {
-  Box,
   ClickAwayListener,
   Grid,
   IconButton,
@@ -15,81 +13,52 @@ import {
   TextField,
 } from '@mui/material';
 import {
-  useFormControl,
-} from '@mui/material/FormControl';
-import {
   Restore,
 } from '@mui/icons-material';
-import { styled } from '@mui/material/styles';
 
-import PasswordField from './PasswordField';
+import {
+  HelperText,
+  PasswordField,
+  WidthBox,
+} from './SharedComponents';
 
-import './App.css';
+import {
+  generatePassword,
+  sha256String,
+} from './PasswordGenerator';
 
-async function generatePassword(passphrase, application, increment, length, characters) {
-  async function sha256Bytes(str) {
-    const buffer = new TextEncoder('utf-8').encode(str);
-    return new Uint8Array(await crypto.subtle.digest('SHA-256', buffer));
-  }
-
-  async function* genBytes(phrase1, phrase2) {
-    for (let index = 0;; index += 1) {
-      const hash = await sha256Bytes(JSON.stringify([phrase1, phrase2, index]));
-      for (let byte of hash) yield byte;
-    }
-  }
-
-  if (passphrase === '' || application === '') return '';
-
-  passphrase = passphrase.replaceAll(' ', '');
-
-  const gen = genBytes(passphrase, application + increment);
-  let password = '';
-  for (let i = 0; i < length; i++) {
-      password += characters[(await gen.next()).value % characters.length];
-  }
-  return password;
-}
-
-const WidthBox = styled(Box)(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    boxSizing: 'border-box',
-    width: '100%',
-  },
-  [theme.breakpoints.up('sm')]: {
-    margin: 'auto',
-    maxWidth: '600px',
-  },
-  height: '100vh',
-  overflow: 'hidden',
-}));
-
-function HelperText(props) {
-  const { focused } = useFormControl() || {};
-
-  const helperText = useMemo(() => {
-    return focused ? props.text : '⠀';
-  }, [focused, props.text]);
-
-  return helperText;
-};
-
-function App() {
+export default function App() {
   const defaultCharacters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
 
   const [passphrase, setPassphrase] = useState('');
+  const [passphraseError, setPassphraseError] = useState('');
   const [application, setApplication] = useState('');
   const [length, setLength] = useState(40);
   const [increment, setIncrement] = useState(0);
   const [characters, setCharacters] = useState(defaultCharacters);
   const [password, setPassword] = useState('');
+  const [storedSalt, setStoredSalt] = useState('');
+  const [storedHash, setStoredHash] = useState('');
+
+  useEffect(() => {
+    const { salt, hash } = JSON.parse(localStorage.getItem('pass') || '{}');
+    setStoredSalt(salt);
+    setStoredHash(hash);
+  }, []);
 
   useEffect(() => {
     async function runAsync() {
-      setPassword(await generatePassword(passphrase, application, increment, length, characters));
+      const hash = await sha256String(JSON.stringify([passphrase, storedSalt]));
+      if (storedHash && hash !== storedHash) {
+        setPassword('');
+        setPassphraseError('Passphrase does not match stored passphrase');
+      } else {
+        setPassword(await generatePassword(passphrase, application, increment, length, characters));
+        setPassphraseError('');
+      }
     };
     runAsync();
-  }, [passphrase, application, increment, length, characters]);
+  }, [passphrase, application, increment, length, characters, storedSalt, storedHash]);
 
   const onStringChange = set => ev => set(ev.target.value);
   const onNumberChange = set => ev => set(Math.max(0, +ev.target.value));
@@ -129,7 +98,8 @@ function App() {
           label="Passphrase"
           autoComplete="off"
           value={passphrase}
-          helperText={<HelperText text={'Your master passphrase. Should be long and memorable'} />}
+          error={!!passphraseError}
+          helperText={passphraseError || <HelperText text={'Your master passphrase. Should be long and memorable'} />}
           onInput={onStringChange(setPassphrase)}
           sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
@@ -214,7 +184,5 @@ function App() {
       onClose={onSnackClose(setWipedSnackOpen)}
       message='Clipboard wiped'
     />
-  </WidthBox>
-}
-
-export default App;
+  </WidthBox>;
+};
