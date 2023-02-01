@@ -153,6 +153,8 @@ export default function App() {
             endAdornment: <InputAdornment position="end">
               <IconButton
                 onClick={onRestoreClick}
+                tabIndex="-1"
+                title="Reset to default characters"
               >
                 <Restore />
               </IconButton>
