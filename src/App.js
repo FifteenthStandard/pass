@@ -77,6 +77,13 @@ export default function App() {
     setCopiedSnackOpen(true);
   };
 
+  const onFormSubmit = ev => {
+    ev.preventDefault();
+    navigator.clipboard.writeText(ev.target.password.value);
+    setWipedSnackOpen(false);
+    setCopiedSnackOpen(true);
+  };
+
   const [wipedSnackOpen, setWipedSnackOpen] = useState(false);
   const onClickAway = ev => {
     navigator.clipboard.writeText('');
@@ -84,14 +91,16 @@ export default function App() {
     setWipedSnackOpen(true);
   };
 
-  return <WidthBox component="form" noValidate autoComplete="off">
+  return <WidthBox>
     <Stack direction="column" justifyContent="center" height="100vh">
       <ClickAwayListener onClickAway={onClickAway}>
         <Paper sx={theme => ({
           paddingInline: theme.spacing(2),
           paddingTop: theme.spacing(3),
         })}>
+        <form noValidate autoComplete="off" onSubmit={onFormSubmit}>
         <PasswordField
+          name="passphrase"
           autoFocus
           required
           fullWidth
@@ -104,6 +113,7 @@ export default function App() {
           sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
         <PasswordField
+          name="application"
           required
           fullWidth
           label="Application"
@@ -114,8 +124,9 @@ export default function App() {
           sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
         <Grid container>
-          <Grid xs={6} sx={theme => ({ paddingRight: theme.spacing(1) })}>
+          <Grid item xs={6} sx={theme => ({ paddingRight: theme.spacing(1) })}>
             <TextField
+              name="increment"
               required
               fullWidth
               label="Increment"
@@ -127,8 +138,9 @@ export default function App() {
               sx={theme => ({ paddingBlock: theme.spacing(1) })}
             />
           </Grid>
-          <Grid xs={6} sx={theme => ({ paddingLeft: theme.spacing(1) })}>
+          <Grid item xs={6} sx={theme => ({ paddingLeft: theme.spacing(1) })}>
             <TextField
+              name="length"
               required
               fullWidth
               label="Length"
@@ -142,6 +154,7 @@ export default function App() {
           </Grid>
         </Grid>
         <TextField
+          name="characters"
           required
           fullWidth
           label="Characters"
@@ -153,7 +166,7 @@ export default function App() {
             endAdornment: <InputAdornment position="end">
               <IconButton
                 onClick={onRestoreClick}
-                tabIndex="-1"
+                tabIndex={-1}
                 title="Reset to default characters"
               >
                 <Restore />
@@ -162,6 +175,7 @@ export default function App() {
           }}
         />
         <PasswordField
+          name="password"
           fullWidth
           readOnly
           disabled={password === ''}
@@ -171,6 +185,12 @@ export default function App() {
           onFocus={onPasswordFocus}
           sx={theme => ({ paddingBlock: theme.spacing(1) })}
         />
+        <input
+          type="submit"
+          hidden
+          disabled={password === ''}
+        />
+        </form>
         </Paper>
       </ClickAwayListener>
     </Stack>

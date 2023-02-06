@@ -39,7 +39,7 @@ function PasswordField(props) {
         <IconButton
           onClick={handleClickShowPassword}
           onMouseDown={handleMouseDownPassword}
-          tabIndex="-1"
+          tabIndex={-1}
           title={showPassword ? 'Hide pasword' : 'Show password'}
         >
           {showPassword ? <VisibilityOff /> : <Visibility />}
