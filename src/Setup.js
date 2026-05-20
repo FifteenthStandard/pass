@@ -39,6 +39,24 @@ export default function Setup() {
     ev.preventDefault();
     if (!canSubmit) return;
 
+    await navigator.credentials.create({
+      publicKey: {
+        challenge: new Uint8Array(32),
+        rp: { id: 'localhost', name: 'Fifteenth Standard' },
+        user: {
+          id: new TextEncoder().encode(passphrase),
+          name: 'user',
+          displayName: 'User',
+        },
+        pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
+        authenticatorSelection: {
+          residentKey: 'required',
+          requireResidentKey: true,
+          userVerification: 'required',
+        },
+      },
+    });
+
     const salt = arrayToHex(getRandomValues(64));
     const hash = await sha256String(JSON.stringify([passphrase, salt]));
     localStorage.setItem('pass', JSON.stringify({ salt, hash }));
@@ -49,6 +67,8 @@ export default function Setup() {
     localStorage.removeItem('pass');
     window.location = '/pass';
   };
+
+  
 
   return <WidthBox component="form" noValidate autoComplete="off" onSubmit={onSubmit}>
     <Stack direction="column" justifyContent="center" height="100vh">

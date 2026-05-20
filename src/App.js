@@ -44,6 +44,23 @@ export default function App() {
     const { salt, hash } = JSON.parse(localStorage.getItem('pass') || '{}');
     setStoredSalt(salt);
     setStoredHash(hash);
+
+    if (!salt || !hash) return;
+
+    async function runAsync() {
+      const credentials = await navigator.credentials.get({
+        publicKey: {
+          challenge: new Uint8Array(32),
+          rpId: 'localhost',
+          userVerification: 'required',
+        },
+      });
+
+      const passphraseBytes = new Uint8Array(credentials.response.userHandle);
+      const passphrase = new TextDecoder().decode(passphraseBytes);
+      setPassphrase(passphrase);
+    };
+    runAsync();
   }, []);
 
   useEffect(() => {
