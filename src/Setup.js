@@ -42,7 +42,7 @@ export default function Setup() {
     await navigator.credentials.create({
       publicKey: {
         challenge: new Uint8Array(32),
-        rp: { id: 'localhost', name: 'Fifteenth Standard' },
+        rp: { id: 'fifteenthstandard.com', name: 'Fifteenth Standard' },
         user: {
           id: new TextEncoder().encode(passphrase),
           name: 'user',
