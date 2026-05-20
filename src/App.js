@@ -51,7 +51,7 @@ export default function App() {
       const credentials = await navigator.credentials.get({
         publicKey: {
           challenge: new Uint8Array(32),
-          rpId: 'localhost',
+          rpId: 'fifteenthstandard.com',
           userVerification: 'required',
         },
       });
