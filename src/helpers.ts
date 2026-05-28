@@ -24,6 +24,7 @@ export async function generatePassword(passphrase: string, application: string, 
 };
 
 const rpId = window.location.hostname;
+const loginAbortController = new AbortController();
 
 export async function getPasskey(): Promise<string | null> {
   if (!await PublicKeyCredential.isConditionalMediationAvailable()) return null;
@@ -34,6 +35,7 @@ export async function getPasskey(): Promise<string | null> {
       userVerification: 'required',
     },
     mediation: 'conditional',
+    signal: loginAbortController.signal,
   });
 
   if (!credentials) return null;
@@ -48,6 +50,7 @@ export async function getPasskey(): Promise<string | null> {
 };
 
 export async function savePasskey(name: string, passphrase: string): Promise<void> {
+  loginAbortController.abort();
   await navigator.credentials.create({
     publicKey: {
       challenge: new Uint8Array(32),
